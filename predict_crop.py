@@ -19,3 +19,23 @@ soil_data = pd.DataFrame([{
 prediction = model.predict(soil_data)
 
 print("Recommended Crop:", prediction[0])
+# Fertilizer recommendation function
+
+def recommend_fertilizer(crop):
+    fertilizer_guide = {
+        "rice": "Check soil-test results and local rice fertilizer recommendations.",
+        "wheat": "Check soil-test results and local wheat fertilizer recommendations.",
+        "maize": "Check soil-test results and local maize fertilizer recommendations."
+    }
+
+    return fertilizer_guide.get(
+        crop.lower(),
+        "Please consult local agricultural recommendations for this crop."
+    )
+
+
+# Display fertilizer guidance
+fertilizer = recommend_fertilizer(prediction[0])
+
+print("Recommended Crop:", prediction[0])
+print("Fertilizer Guidance:", fertilizer)
