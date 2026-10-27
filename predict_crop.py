@@ -3,16 +3,24 @@ import pandas as pd
 
 # Load the trained model
 model = joblib.load("crop_model.pkl")
+# Take soil and weather values from the user
 
+N = float(input("Enter Nitrogen (N): "))
+P = float(input("Enter Phosphorus (P): "))
+K = float(input("Enter Potassium (K): "))
+temperature = float(input("Enter Temperature (°C): "))
+humidity = float(input("Enter Humidity (%): "))
+ph = float(input("Enter soil pH: "))
+rainfall = float(input("Enter Rainfall (mm): "))
 # Enter soil and weather values
 soil_data = pd.DataFrame([{
-    "N": 90,
-    "P": 42,
-    "K": 43,
-    "temperature": 20.8,
-    "humidity": 82,
-    "ph": 6.5,
-    "rainfall": 202
+    "N": N,
+    "P": P,
+    "K": K,
+    "temperature": temperature,
+    "humidity": humidity,
+    "ph": ph,
+    "rainfall": rainfall
 }])
 
 # Predict the suitable crop
