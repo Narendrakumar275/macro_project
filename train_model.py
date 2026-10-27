@@ -16,3 +16,9 @@ print("\nOutput Data:")
 print(y.head())
 print("\nInput shape:", X.shape)
 print("Output shape:", y.shape)
+from sklearn.model_selection import train_test_split
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.20, random_state=42, stratify=y)
+print("\nTraining Data shape:", X_train.shape)
+print("Testing Data shape:", X_test.shape)
