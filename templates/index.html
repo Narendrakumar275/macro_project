@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Crop Recommendation System</title>
+</head>
+<body>
+
+    <h1> AI-Based Crop Recommendation System</h1>
+    <p>Enter your soil and weather information to predict a suitable crop.</p>
+
+    <form action="/predict" method="POST">
+
+        <label>Nitrogen (N):</label>
+        <input type="number" name="N" step="any" required>
+        <br><br>
+
+        <label>Phosphorus (P):</label>
+        <input type="number" name="P" step="any" required>
+        <br><br>
+
+        <label>Potassium (K):</label>
+        <input type="number" name="K" step="any" required>
+        <br><br>
+
+        <label>Temperature (°C):</label>
+        <input type="number" name="temperature" step="any" required>
+        <br><br>
+
+        <label>Humidity (%):</label>
+        <input type="number" name="humidity" step="any" required>
+        <br><br>
+
+        <label>Soil pH:</label>
+        <input type="number" name="ph" step="any" required>
+        <br><br>
+
+        <label>Rainfall (mm):</label>
+        <input type="number" name="rainfall" step="any" required>
+        <br><br>
+
+        <button type="submit">Recommend Crop</button>
+
+    </form>
+
+    {% if prediction %}
+        <h2>Recommended Crop: {{ prediction }}</h2>
+    {% endif %}
+
+</body>
+</html>
