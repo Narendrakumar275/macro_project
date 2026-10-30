@@ -5,7 +5,8 @@ print("Hello, Farmer")
 
 import pandas as pd
 import joblib
-
+#GridSearch optimization for the model
+from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.tree import DecisionTreeClassifier
@@ -72,6 +73,42 @@ print("Random Forest Accuracy:",
       round(rf_accuracy * 100, 2), "%")
 print("Random Forest F1-score:",
       round(rf_f1, 4))
+# Grid Search Hyperparameter Optimization
+
+print("\nGrid Search Started")
+
+param_grid = {
+    'n_estimators': [100, 200],
+    'max_depth': [10, 20, None],
+    'min_samples_split': [2, 5]
+}
+
+grid_search = GridSearchCV(
+    estimator=RandomForestClassifier(random_state=42),
+    param_grid=param_grid,
+    cv=3,
+    scoring='f1_weighted',
+    n_jobs=-1,
+    verbose=1
+)
+
+grid_search.fit(X_train, y_train)
+
+best_model = grid_search.best_estimator_
+
+print("\nBest Parameters:")
+print(grid_search.best_params_)
+
+optimized_pred = best_model.predict(X_test)
+
+optimized_accuracy = accuracy_score(y_test, optimized_pred)
+optimized_f1 = f1_score(
+    y_test, optimized_pred, average="weighted"
+)
+
+print("\nOptimized Random Forest Results")
+print("Accuracy:", round(optimized_accuracy * 100, 2), "%")
+print("F1-score:", round(optimized_f1, 4))
 
 # decision tree model
 dt_model = DecisionTreeClassifier(random_state=42)
@@ -91,6 +128,8 @@ print("Decision Tree F1-score:",
       round(dt_f1, 4))
 
 # Save random forest model as the main model
-joblib.dump(rf_model, "crop_model.pkl")
+joblib.dump(best_model, "crop_model.pkl")
+
+print("\nOptimized Random Forest model saved successfully")
 
 print("\nRandom Forest model saved successfully")
