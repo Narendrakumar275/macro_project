@@ -1,52 +1,359 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Crop Recommendation System</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CropAI – Smart Crop &amp; Fertilizer Recommendation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --g900:#0e3b29; --g800:#14513a; --g700:#1b6b4b; --g500:#2e9e6b; --g100:#e3f3ea; --g50:#f3faf6;
+  --wheat:#f2b632; --wheat-d:#d99a12;
+  --ink:#16231c; --muted:#5b6b62; --line:#dbe7e0; --bg:#f7faf8; --white:#fff;
+  --r:16px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:80px}
+body{font-family:"Plus Jakarta Sans",system-ui,"Segoe UI",sans-serif;color:var(--ink);background:var(--bg);line-height:1.6;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+.container{width:min(1180px,100% - 2.5rem);margin-inline:auto}
+svg{display:block}
+
+/* Navbar */
+.nav{position:sticky;top:0;z-index:50;background:rgba(14,59,41,.96);backdrop-filter:blur(8px)}
+.nav .container{display:flex;align-items:center;justify-content:space-between;height:68px}
+.logo{display:flex;align-items:center;gap:.6rem;color:#fff;font-weight:800;font-size:1.3rem}
+.logo-mark{width:34px;height:34px;border-radius:10px;background:var(--wheat);display:grid;place-items:center}
+.menu{display:flex;align-items:center;gap:2rem}
+.menu a{color:#cfe6d9;font-weight:500;font-size:.95rem;transition:color .15s}
+.menu a:hover{color:#fff}
+.menu .cta{background:var(--wheat);color:var(--g900);font-weight:700;padding:.55rem 1.2rem;border-radius:999px}
+.menu .cta:hover{background:#ffc94d;color:var(--g900)}
+
+/* Hero */
+.hero{background:linear-gradient(180deg,var(--g900),var(--g800));color:#fff;overflow:hidden}
+.hero .container{display:grid;grid-template-columns:1.1fr .9fr;gap:3rem;align-items:center;padding:4.5rem 0 4rem}
+.pill{display:inline-flex;align-items:center;gap:.5rem;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);padding:.35rem .9rem;border-radius:999px;font-size:.85rem;color:#d6eee0;margin-bottom:1.4rem}
+.pill i{width:8px;height:8px;border-radius:50%;background:#5ee39a}
+.hero h1{font-size:clamp(2.4rem,5vw,3.9rem);line-height:1.08;font-weight:800;letter-spacing:-.025em;margin-bottom:1.2rem}
+.hero p.lead{font-size:1.15rem;color:#c3dccf;max-width:34rem;margin-bottom:2rem}
+.btns{display:flex;gap:1rem;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:.5rem;font:inherit;font-weight:700;padding:.9rem 1.7rem;border-radius:12px;border:0;cursor:pointer;transition:transform .12s,background .15s}
+.btn:active{transform:translateY(1px)}
+.btn-primary{background:var(--wheat);color:var(--g900)}
+.btn-primary:hover{background:#ffc94d}
+.btn-ghost{background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.35)}
+.btn-ghost:hover{background:rgba(255,255,255,.08)}
+.stats{display:flex;gap:2.5rem;margin-top:2.8rem;padding-top:1.8rem;border-top:1px solid rgba(255,255,255,.15)}
+.stats b{display:block;font-size:1.8rem;font-weight:800;color:var(--wheat)}
+.stats span{font-size:.9rem;color:#b5d1c2}
+.hero-art{border-radius:24px;overflow:hidden;box-shadow:0 30px 60px rgba(0,0,0,.35)}
+
+/* Sections */
+section{padding:5rem 0}
+.sec-head{text-align:center;max-width:40rem;margin:0 auto 3rem}
+.sec-head h2{font-size:clamp(1.8rem,3.4vw,2.5rem);font-weight:800;letter-spacing:-.02em;line-height:1.2;margin-bottom:.7rem}
+.sec-head p{color:var(--muted);font-size:1.05rem}
+
+/* How it works */
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem}
+.step{background:var(--white);border:1px solid var(--line);border-radius:var(--r);padding:2rem 1.7rem}
+.step .ic{width:52px;height:52px;border-radius:14px;background:var(--g100);display:grid;place-items:center;margin-bottom:1.2rem}
+.step h3{font-size:1.15rem;font-weight:700;margin-bottom:.4rem}
+.step p{color:var(--muted);font-size:.98rem}
+
+/* Predict */
+#predict{background:var(--white);border-block:1px solid var(--line)}
+.predict-grid{display:grid;grid-template-columns:1.25fr 1fr;gap:2rem;align-items:start}
+.card{background:var(--white);border:1px solid var(--line);border-radius:20px;padding:2rem;box-shadow:0 10px 30px rgba(14,59,41,.06)}
+.card h3{font-size:1.25rem;font-weight:800;margin-bottom:.3rem}
+.card .sub{color:var(--muted);font-size:.95rem;margin-bottom:1.5rem}
+.group-title{display:flex;align-items:center;gap:.6rem;font-weight:700;font-size:.95rem;color:var(--g700);margin:1.4rem 0 .9rem}
+.group-title:first-of-type{margin-top:0}
+.group-title::after{content:"";flex:1;height:1px;background:var(--line)}
+.fields{display:grid;grid-template-columns:1fr 1fr;gap:1rem 1.1rem}
+.field label{display:block;font-weight:600;font-size:.9rem;margin-bottom:.35rem}
+.field .box{position:relative}
+.field input{width:100%;height:3rem;padding:0 3.4rem 0 .95rem;font:inherit;font-weight:500;color:var(--ink);background:var(--g50);border:1.5px solid var(--line);border-radius:12px;transition:border-color .15s,box-shadow .15s,background .15s}
+.field input:hover{border-color:#b9d3c6}
+.field input:focus{outline:none;background:#fff;border-color:var(--g500);box-shadow:0 0 0 4px rgba(46,158,107,.18)}
+.field .unit{position:absolute;right:.9rem;top:50%;transform:translateY(-50%);font-size:.8rem;font-weight:600;color:var(--muted);pointer-events:none}
+.field small{display:block;margin-top:.3rem;font-size:.78rem;color:#7d8c84}
+.submit{width:100%;margin-top:1.8rem;justify-content:center;font-size:1.05rem;padding:1rem;background:var(--g800);color:#fff}
+.submit:hover{background:var(--g700)}
+
+/* Result */
+.side{position:sticky;top:90px;display:grid;gap:1.2rem}
+.result{background:linear-gradient(160deg,var(--g800),var(--g900));color:#fff;border-radius:20px;padding:2rem;position:relative;overflow:hidden}
+.result::after{content:"";position:absolute;right:-40px;top:-40px;width:160px;height:160px;border-radius:50%;background:rgba(242,182,50,.14)}
+.result .tag{font-size:.82rem;font-weight:600;color:#8fe0b2;margin-bottom:.6rem}
+.result .crop{font-size:clamp(2.4rem,5vw,3.4rem);font-weight:800;letter-spacing:-.02em;line-height:1.05;color:var(--wheat);text-transform:capitalize;margin-bottom:1.1rem}
+.result .ok{display:inline-flex;align-items:center;gap:.5rem;background:rgba(94,227,154,.16);color:#a7f0c6;font-size:.88rem;font-weight:600;padding:.4rem .9rem;border-radius:999px}
+.placeholder{border:2px dashed var(--line);border-radius:20px;padding:2.4rem 2rem;text-align:center;color:var(--muted);background:var(--g50)}
+.placeholder .ic{width:60px;height:60px;border-radius:50%;background:var(--g100);display:grid;place-items:center;margin:0 auto 1rem}
+.placeholder b{display:block;color:var(--ink);font-size:1.05rem;margin-bottom:.3rem}
+.sum{background:var(--white);border:1px solid var(--line);border-radius:20px;padding:1.5rem 1.6rem}
+.sum h4{font-size:1rem;font-weight:700;margin-bottom:1rem}
+.sum dl{display:grid;grid-template-columns:1fr 1fr;gap:.8rem 1rem}
+.sum dt{font-size:.8rem;color:var(--muted)}
+.sum dd{font-weight:700;font-size:1.05rem}
+.sum .dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:.4rem}
+.note{font-size:.85rem;color:var(--muted);background:#fff8e6;border:1px solid #f3e1a8;border-radius:12px;padding:.9rem 1rem}
+
+/* Crops */
+.chips{display:flex;flex-wrap:wrap;justify-content:center;gap:.7rem;max-width:54rem;margin:0 auto}
+.chip{background:var(--white);border:1px solid var(--line);padding:.5rem 1.15rem;border-radius:999px;font-weight:600;font-size:.92rem;text-transform:capitalize}
+.chip.on{background:var(--g800);color:var(--wheat);border-color:var(--g800)}
+
+/* Footer */
+footer{background:var(--g900);color:#a9c7b6;padding:2.5rem 0}
+footer .container{display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap}
+footer .logo{font-size:1.1rem}
+
+/* Responsive */
+@media(max-width:960px){
+  .hero .container,.predict-grid{grid-template-columns:1fr}
+  .hero-art{order:-1;max-width:520px}
+  .side{position:static}
+  .steps{grid-template-columns:1fr}
+}
+@media(max-width:640px){
+  .menu a:not(.cta){display:none}
+  .fields{grid-template-columns:1fr}
+  .stats{gap:1.5rem}
+  section{padding:3.5rem 0}
+  .card{padding:1.4rem}
+}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
+:focus-visible{outline:3px solid var(--wheat);outline-offset:2px}
+</style>
 </head>
 <body>
 
-    <h1> AI-Based Crop Recommendation System</h1>
-    <p>Enter your soil and weather information to predict a suitable crop.</p>
+<!-- NAVBAR -->
+<nav class="nav">
+  <div class="container">
+    <a href="#top" class="logo">
+      <span class="logo-mark">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0e3b29" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22V10"/><path d="M12 10c0-4 3-6 7-6 0 4-3 6-7 6z"/><path d="M12 14c0-3-2.5-5-6-5 0 3.500 2.500 5 6 5z"/></svg>
+      </span>
+      CropAI
+    </a>
+    <div class="menu">
+      <a href="#how">How it works</a>
+      <a href="#crops">Crops</a>
+      <a href="#predict" class="cta">Get Recommendation</a>
+    </div>
+  </div>
+</nav>
 
-    <form action="/predict" method="POST">
+<!-- HERO -->
+<header class="hero" id="top">
+  <div class="container">
+    <div>
+      <span class="pill"><i></i> AI-powered farming assistant</span>
+      <h1>Grow the right crop for your soil.</h1>
+      <p class="lead">Enter your soil nutrients and local weather. Our machine learning model suggests the crop that suits your land best, so you plan with confidence.</p>
+      <div class="btns">
+        <a href="#predict" class="btn btn-primary">Predict My Crop</a>
+        <a href="#how" class="btn btn-ghost">How it works</a>
+      </div>
+      <div class="stats">
+        <div><b>22</b><span>Crops supported</span></div>
+        <div><b>7</b><span>Soil &amp; weather inputs</span></div>
+        <div><b>RF</b><span>Random Forest model</span></div>
+      </div>
+    </div>
 
-        <label>Nitrogen (N):</label>
-        <input type="number" name="N" step="any" required>
-        <br><br>
+    <div class="hero-art">
+      <svg viewBox="0 0 520 420" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Farm field illustration">
+        <defs>
+          <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#bfe7d0"/><stop offset="1" stop-color="#f6efc9"/></linearGradient>
+        </defs>
+        <rect width="520" height="420" fill="url(#sky)"/>
+        <circle cx="400" cy="100" r="46" fill="#f2b632"/>
+        <circle cx="400" cy="100" r="66" fill="#f2b632" opacity=".25"/>
+        <path d="M0 230 Q130 170 260 215 T520 200 V420 H0Z" fill="#5fbf8a"/>
+        <path d="M0 270 Q150 215 300 262 T520 245 V420 H0Z" fill="#2e9e6b"/>
+        <path d="M0 320 Q160 270 320 312 T520 300 V420 H0Z" fill="#1b6b4b"/>
+        <g stroke="#14513a" stroke-width="3" stroke-linecap="round" opacity=".55">
+          <path d="M0 350 Q200 305 520 335"/><path d="M0 375 Q200 335 520 362"/><path d="M0 400 Q200 365 520 388"/>
+        </g>
+        <g fill="#f2b632">
+          <ellipse cx="90" cy="300" rx="5" ry="11"/><ellipse cx="150" cy="292" rx="5" ry="11"/><ellipse cx="215" cy="296" rx="5" ry="11"/>
+          <ellipse cx="290" cy="300" rx="5" ry="11"/><ellipse cx="360" cy="292" rx="5" ry="11"/><ellipse cx="430" cy="296" rx="5" ry="11"/>
+        </g>
+        <g transform="translate(60 95)"><rect width="96" height="34" rx="17" fill="#fff" opacity=".8"/><rect x="22" y="-14" width="54" height="34" rx="17" fill="#fff" opacity=".8"/></g>
+        <g transform="translate(250 60) scale(.8)"><rect width="96" height="34" rx="17" fill="#fff" opacity=".6"/><rect x="22" y="-14" width="54" height="34" rx="17" fill="#fff" opacity=".6"/></g>
+      </svg>
+    </div>
+  </div>
+</header>
 
-        <label>Phosphorus (P):</label>
-        <input type="number" name="P" step="any" required>
-        <br><br>
+<!-- HOW IT WORKS -->
+<section id="how">
+  <div class="container">
+    <div class="sec-head">
+      <h2>From soil test to crop choice in three steps</h2>
+      <p>No complicated setup. Just the numbers from your soil report and your local weather.</p>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="ic"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#1b6b4b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6"/><path d="M10 3v6L4.500 19a1.500 1.500 0 0 0 1.300 2.200h12.400A1.500 1.500 0 0 0 19.500 19L14 9V3"/></svg></div>
+        <h3>1. Enter your details</h3>
+        <p>Add Nitrogen, Phosphorus, Potassium, soil pH, temperature, humidity and rainfall.</p>
+      </div>
+      <div class="step">
+        <div class="ic"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#1b6b4b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M9 9h.01M15 9h.01M9 15h6"/></svg></div>
+        <h3>2. Model analyses it</h3>
+        <p>A Random Forest model trained on crop data compares your values with what each crop needs.</p>
+      </div>
+      <div class="step">
+        <div class="ic"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#1b6b4b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div>
+        <h3>3. Get your crop</h3>
+        <p>See the best matching crop instantly, along with a summary of the soil values you entered.</p>
+      </div>
+    </div>
+  </div>
+</section>
 
-        <label>Potassium (K):</label>
-        <input type="number" name="K" step="any" required>
-        <br><br>
+<!-- PREDICT -->
+<section id="predict">
+  <div class="container">
+    <div class="sec-head">
+      <h2>Find your best crop</h2>
+      <p>Fill in the values below and press predict.</p>
+    </div>
 
-        <label>Temperature (°C):</label>
-        <input type="number" name="temperature" step="any" required>
-        <br><br>
+    <div class="predict-grid">
 
-        <label>Humidity (%):</label>
-        <input type="number" name="humidity" step="any" required>
-        <br><br>
+      <form class="card" action="{{ url_for('predict') }}" method="POST">
+        <h3>Soil &amp; Weather Details</h3>
+        <p class="sub">Typical ranges are shown under each field.</p>
 
-        <label>Soil pH:</label>
-        <input type="number" name="ph" step="any" required>
-        <br><br>
+        <div class="group-title">Soil nutrients</div>
+        <div class="fields">
+          <div class="field">
+            <label for="N">Nitrogen (N)</label>
+            <div class="box"><input id="N" type="number" name="N" min="0" max="140" step="any" value="{{ request.form.get('N', 90) }}" required><span class="unit">kg/ha</span></div>
+            <small>Range 0 – 140</small>
+          </div>
+          <div class="field">
+            <label for="P">Phosphorus (P)</label>
+            <div class="box"><input id="P" type="number" name="P" min="5" max="145" step="any" value="{{ request.form.get('P', 42) }}" required><span class="unit">kg/ha</span></div>
+            <small>Range 5 – 145</small>
+          </div>
+          <div class="field">
+            <label for="K">Potassium (K)</label>
+            <div class="box"><input id="K" type="number" name="K" min="5" max="205" step="any" value="{{ request.form.get('K', 43) }}" required><span class="unit">kg/ha</span></div>
+            <small>Range 5 – 205</small>
+          </div>
+          <div class="field">
+            <label for="ph">Soil pH</label>
+            <div class="box"><input id="ph" type="number" name="ph" min="3" max="10" step="any" value="{{ request.form.get('ph', 6.5) }}" required><span class="unit">pH</span></div>
+            <small>Range 3.5 – 9.9</small>
+          </div>
+        </div>
 
-        <label>Rainfall (mm):</label>
-        <input type="number" name="rainfall" step="any" required>
-        <br><br>
+        <div class="group-title">Weather</div>
+        <div class="fields">
+          <div class="field">
+            <label for="temperature">Temperature</label>
+            <div class="box"><input id="temperature" type="number" name="temperature" min="5" max="50" step="any" value="{{ request.form.get('temperature', 25) }}" required><span class="unit">°C</span></div>
+            <small>Range 8 – 44</small>
+          </div>
+          <div class="field">
+            <label for="humidity">Humidity</label>
+            <div class="box"><input id="humidity" type="number" name="humidity" min="0" max="100" step="any" value="{{ request.form.get('humidity', 80) }}" required><span class="unit">%</span></div>
+            <small>Range 14 – 100</small>
+          </div>
+          <div class="field">
+            <label for="rainfall">Rainfall</label>
+            <div class="box"><input id="rainfall" type="number" name="rainfall" min="0" max="400" step="any" value="{{ request.form.get('rainfall', 200) }}" required><span class="unit">mm</span></div>
+            <small>Range 20 – 300</small>
+          </div>
+        </div>
 
-        <button type="submit">Recommend Crop</button>
+        <button type="submit" class="btn submit">Predict Best Crop</button>
+      </form>
 
-    </form>
+      <aside class="side" id="result" aria-live="polite">
+        {% if prediction %}
+          <div class="result">
+            <p class="tag">RECOMMENDED CROP</p>
+            <p class="crop">{{ prediction }}</p>
+            <span class="ok">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+              Suitable for your soil &amp; climate
+            </span>
+          </div>
 
-    {% if prediction %}
-        <h2>Recommended Crop: {{ prediction }}</h2>
-    {% endif %}
+          <div class="sum">
+            <h4>Your inputs</h4>
+            <dl>
+              <div><dt><i class="dot" style="background:#2a63d8"></i>Nitrogen (N)</dt><dd>{{ request.form.get('N') }}</dd></div>
+              <div><dt><i class="dot" style="background:#6b3fc4"></i>Phosphorus (P)</dt><dd>{{ request.form.get('P') }}</dd></div>
+              <div><dt><i class="dot" style="background:#f0541f"></i>Potassium (K)</dt><dd>{{ request.form.get('K') }}</dd></div>
+              <div><dt>Soil pH</dt><dd>{{ request.form.get('ph') }}</dd></div>
+              <div><dt>Temperature</dt><dd>{{ request.form.get('temperature') }} °C</dd></div>
+              <div><dt>Humidity</dt><dd>{{ request.form.get('humidity') }} %</dd></div>
+              <div><dt>Rainfall</dt><dd>{{ request.form.get('rainfall') }} mm</dd></div>
+            </dl>
+          </div>
+
+          {% if fertilizer %}
+          <div class="sum"><h4>Fertilizer guidance</h4><p>{{ fertilizer }}</p></div>
+          {% endif %}
+
+          <p class="note">This is an AI suggestion. Please confirm with a local soil test or your nearest agriculture office before sowing.</p>
+        {% else %}
+          <div class="placeholder">
+            <div class="ic"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#1b6b4b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22V10"/><path d="M12 10c0-4 3-6 7-6 0 4-3 6-7 6z"/><path d="M12 14c0-3-2.500-5-6-5 0 3.500 2.500 5 6 5z"/></svg></div>
+            <b>Your recommendation will appear here</b>
+            Fill in the form and press <b style="display:inline">Predict Best Crop</b>.
+          </div>
+        {% endif %}
+      </aside>
+
+    </div>
+  </div>
+</section>
+
+<!-- CROPS -->
+<section id="crops">
+  <div class="container">
+    <div class="sec-head">
+      <h2>Crops our model can recommend</h2>
+      <p>Trained on 22 different crops across cereals, pulses, fruits and cash crops.</p>
+    </div>
+    <div class="chips">
+      {% set crops = ['rice','maize','chickpea','kidneybeans','pigeonpeas','mothbeans','mungbean','blackgram','lentil','pomegranate','banana','mango','grapes','watermelon','muskmelon','apple','orange','papaya','coconut','cotton','jute','coffee'] %}
+      {% for c in crops %}
+        <span class="chip{% if prediction and prediction|lower == c %} on{% endif %}">{{ c }}</span>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <a href="#top" class="logo">
+      <span class="logo-mark" style="width:28px;height:28px;border-radius:8px">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0e3b29" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22V10"/><path d="M12 10c0-4 3-6 7-6 0 4-3 6-7 6z"/></svg>
+      </span>
+      CropAI
+    </a>
+    <p>AI-Based Crop &amp; Fertilizer Recommendation System</p>
+    <p>contact no. 6267097891</p>
+  </div>
+</footer>
+
+{% if prediction %}
+<script>document.getElementById("predict").scrollIntoView();</script>
+{% endif %}
 
 </body>
 </html>

@@ -1,0 +1,195 @@
+/*Tokens*/
+:root {
+  --leaf:      #1d4d2b;   /* deep crop green */
+  --leaf-dark: #143720;
+  --sprout:    #7fb069;   /* young shoot */
+  --grain:     #e6b422;   /* ripe wheat */
+  --soil:      #2a2118;   /* text */
+  --field:     #eef3e8;   /* page background */
+  --paper:     #ffffff;
+  --line:      #cfdcc4;
+  --muted:     #5d6b57;
+  --error:     #b3261e;
+
+  --radius: 10px;
+}
+
+/*Base*/
+*, *::before, *::after { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  font-family: "Mukta", "Noto Sans Devanagari", system-ui, sans-serif;
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: var(--soil);
+  background: var(--field);
+}
+
+.wrap {
+  width: min(880px, 100% - 2rem);
+  margin-inline: auto;
+}
+
+/*Hero*/
+.hero {
+  background: var(--leaf);
+  color: #fff;
+  padding: 3.5rem 0 5.5rem;
+  border-bottom: 6px solid var(--grain);
+}
+
+.hero h1 {
+  margin: 0 0 .5rem;
+  font-size: clamp(2.2rem, 6vw, 3.6rem);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+}
+
+.hero .sub {
+  margin: 0;
+  max-width: 52ch;
+  font-size: 1.1rem;
+  color: #d9ead0;
+}
+
+main { margin-top: -3rem; }
+
+/* Form card*/
+.card {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 1.5rem 1.5rem 2rem;
+  box-shadow: 0 10px 30px rgba(20, 55, 32, .12);
+}
+
+fieldset {
+  border: 0;
+  margin: 0 0 1.5rem;
+  padding: 0;
+}
+
+legend {
+  padding: 0;
+  margin-bottom: .9rem;
+  font-weight: 800;
+  font-size: 1.25rem;
+  color: var(--leaf);
+  border-bottom: 3px solid var(--sprout);
+  width: 100%;
+  padding-bottom: .3rem;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem 1.25rem;
+}
+
+.field { display: flex; flex-direction: column; }
+
+.name { font-weight: 600; margin-bottom: .25rem; }
+.name small { font-weight: 400; color: var(--muted); margin-left: .25rem; }
+
+.hint { margin-top: .25rem; font-size: .88rem; color: var(--muted); }
+
+input[type="number"] {
+  width: 100%;
+  padding: .7rem .85rem;
+  font: inherit;
+  color: var(--soil);
+  background: #fbfdf9;
+  border: 2px solid var(--line);
+  border-radius: 8px;
+  transition: border-color .15s, box-shadow .15s;
+}
+
+input[type="number"]::placeholder { color: #9aa793; }
+
+input[type="number"]:hover { border-color: var(--sprout); }
+
+input[type="number"]:focus-visible {
+  outline: none;
+  border-color: var(--leaf);
+  box-shadow: 0 0 0 4px rgba(127, 176, 105, .35);
+}
+
+input[type="number"]:user-invalid { border-color: var(--error); }
+
+/*Button*/
+.btn {
+  display: block;
+  width: 100%;
+  margin-top: .5rem;
+  padding: .95rem 1rem;
+  font: inherit;
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--soil);
+  background: var(--grain);
+  border: 0;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background .15s, transform .1s;
+}
+
+.btn:hover { background: #f0c53a; }
+.btn:active { transform: translateY(1px); }
+.btn:focus-visible { outline: 3px solid var(--leaf); outline-offset: 3px; }
+
+/* ---------- Result ---------- */
+.result {
+  margin-bottom: 1.5rem;
+  padding: 1.5rem;
+  background: var(--leaf-dark);
+  color: #fff;
+  border-radius: var(--radius);
+  border-left: 8px solid var(--grain);
+  box-shadow: 0 10px 30px rgba(20, 55, 32, .25);
+  animation: rise .5s ease-out;
+}
+
+.result-label { margin: 0; color: #bcd8ae; font-size: .95rem; }
+
+.result-crop {
+  margin: .1rem 0 .6rem;
+  font-size: clamp(2.2rem, 8vw, 3.4rem);
+  font-weight: 800;
+  line-height: 1.1;
+  text-transform: capitalize;
+  color: var(--grain);
+}
+
+.result-note { margin: .4rem 0 0; font-size: .95rem; color: #d9ead0; }
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/*Footer*/
+.foot {
+  padding: 2rem 0 2.5rem;
+  text-align: center;
+  font-size: .9rem;
+  color: var(--muted);
+}
+
+.foot p { margin: 0; }
+
+/* Mobile */
+@media (max-width: 600px) {
+  .grid { grid-template-columns: 1fr; }
+  .hero { padding: 2.5rem 0 4.5rem; }
+  .card { padding: 1.1rem 1rem 1.5rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .result { animation: none; }
+  * { transition: none !important; }
+}

@@ -1,47 +1,96 @@
+
 print("AI-Based Crop Recommendation System")
 print("Model Training Started")
 print("Hello, Farmer")
+
 import pandas as pd
+import joblib
+
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.metrics import accuracy_score, f1_score
+
+# load dataset
 data = pd.read_csv("Crop_recommendation.csv")
+
+print("\nFirst 5 rows:")
 print(data.head())
-X =data[
+
+# Check missing values
+print("\nMissing values in each column:")
+print(data.isnull().sum())
+print("Total missing values:", data.isnull().sum().sum())
+
+# Check duplicate rows
+print("\nTotal rows:", len(data))
+print("Duplicate rows:", data.duplicated().sum())
+
+# remove missing values and duplicate rows
+data = data.dropna()
+data = data.drop_duplicates()
+
+# Select input features
+X = data[
     ['N', 'P', 'K', 'temperature',
-      'humidity', 'ph', 'rainfall']
+     'humidity', 'ph', 'rainfall']
 ]
 
-#select output
+# Select target
+y = data['label']
 
-y =data['label']
-print("Input Data:")
-print(X.head())
-print("\nOutput Data:")
-print(y.head())
 print("\nInput shape:", X.shape)
 print("Output shape:", y.shape)
-from sklearn.model_selection import train_test_split
 
+# Split dataset
 X_train, X_test, y_train, y_test = train_test_split(
-    X, y, test_size=0.20, random_state=42, stratify=y)
-print("\nTraining Data shape:", X_train.shape)
-print("Testing Data shape:", X_test.shape)
+    X, y,
+    test_size=0.20,
+    random_state=42,
+    stratify=y
+)
 
-# create a random forest model
+print("\nTraining data shape:", X_train.shape)
+print("Testing data shape:", X_test.shape)
 
-from sklearn.ensemble import RandomForestClassifier
-model = RandomForestClassifier(n_estimators =100,
-                               random_state = 42)
-model.fit(X_train, y_train)
-print("\nModel training completed")
+# random forest model
+rf_model = RandomForestClassifier(
+    n_estimators=100,
+    random_state=42
+)
 
-#model accuracy check
+rf_model.fit(X_train, y_train)
 
-from sklearn.metrics import accuracy_score
-y_pred = model.predict(X_test)
-accuracy = accuracy_score(y_test, y_pred)
-print("\nModel Accuracy:",round(accuracy*100,2),"%")
+# Random Forest evaluation
+rf_pred = rf_model.predict(X_test)
 
-#train model save
+rf_accuracy = accuracy_score(y_test, rf_pred)
+rf_f1 = f1_score(y_test, rf_pred, average="weighted")
 
-import joblib
-joblib.dump(model,"crop_model.pkl")
-print("\nModel saved successfully")
+print("\nRandom Forest training completed")
+print("Random Forest Accuracy:",
+      round(rf_accuracy * 100, 2), "%")
+print("Random Forest F1-score:",
+      round(rf_f1, 4))
+
+# decision tree model
+dt_model = DecisionTreeClassifier(random_state=42)
+
+dt_model.fit(X_train, y_train)
+
+# Decision Tree evaluation
+dt_pred = dt_model.predict(X_test)
+
+dt_accuracy = accuracy_score(y_test, dt_pred)
+dt_f1 = f1_score(y_test, dt_pred, average="weighted")
+
+print("\nDecision Tree training completed")
+print("Decision Tree Accuracy:",
+      round(dt_accuracy * 100, 2), "%")
+print("Decision Tree F1-score:",
+      round(dt_f1, 4))
+
+# Save random forest model as the main model
+joblib.dump(rf_model, "crop_model.pkl")
+
+print("\nRandom Forest model saved successfully!")
